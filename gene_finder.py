@@ -30,8 +30,16 @@ def get_complement(nucleotide):
     >>> get_complement('C')
     'G'
     """
-    # TODO: implement this
-    pass
+    if nucleotide == 'A':
+        return 'T'
+    elif nucleotide == 'T':
+        return 'A'
+    elif nucleotide == 'C':
+        return 'G'
+    elif nucleotide == 'G':
+        return 'C'
+    else:
+        return 'not a nucleotide'
 
 
 def get_reverse_complement(dna):
@@ -45,8 +53,13 @@ def get_reverse_complement(dna):
     >>> get_reverse_complement("CCGCGTTCA")
     'TGAACGCGG'
     """
-    # TODO: implement this
-    pass
+    reverse_compelment = ''
+    for i in range(1, len(dna)+1):
+        new_i = len(dna) - i
+        nucleotide_2 = dna[new_i]
+        complement = get_complement(nucleotide_2)
+        reverse_compelment = reverse_compelment + complement
+    return reverse_compelment
 
 
 def rest_of_ORF(dna):
@@ -161,6 +174,8 @@ def gene_finder(dna):
     # TODO: implement this
     pass
 
+
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
+    get_reverse_complement("ATGCCCGCTTT")
