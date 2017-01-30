@@ -55,9 +55,13 @@ def get_reverse_complement(dna):
     """
     reverse_compelment = ''
     for i in range(1, len(dna)+1):
+        # iterates backwards through the loop
         new_i = len(dna) - i
-        nucleotide_2 = dna[new_i]
-        complement = get_complement(nucleotide_2)
+        # gets nucleotide at end of list
+        nucleotide = dna[new_i]
+        # finds complement of nucleotide
+        complement = get_complement(nucleotide)
+        # adds complement to return value reverse_compelment
         reverse_compelment = reverse_compelment + complement
     return reverse_compelment
 
@@ -75,16 +79,25 @@ def rest_of_ORF(dna):
     >>> rest_of_ORF("ATGAGATAGG")
     'ATGAGA'
     """
+    # Sets default ORF to start codon
     ORF = dna[0:3]
+    # Defines length codons as number of full codons
     length_codons = len(dna)//3
+    # iterates through codons starting with second
     for i in range(2, length_codons+1):
+        # defines stant and end of condon in dna
         end = 3*i
         start = end - 3
+        # gets codon from dna
         codon = dna[start:end]
+        # checks for stop codon
         if codon == 'TGA' or codon == 'TAG' or codon == 'TAA':
             return ORF
+        # adds codon to ORF
         else:
             ORF = ORF + codon
+            # if current codon is the last, add the rest of dna strand
+            # to ORF
             if (i*3 + 3) > len(dna):
                 ORF = ORF + dna[end:len(dna)]
     return ORF
@@ -103,17 +116,28 @@ def find_all_ORFs_oneframe(dna):
     >>> find_all_ORFs_oneframe("ATGCATGAATGTAGATAGATGTGCCC")
     ['ATGCATGAATGTAGA', 'ATGTGCCC']
     """
+    # initilizes running_length to keep track of index in dna
     running_length = 0
+    # initilizes return variable list_ORFs
     list_ORFs = []
+    # loops through dna sequence
     while running_length <= len(dna):
+        # start where last ORF ended
         start = running_length
+        # end of codon is three away from start
         end = start + 3
+        # pulls codon from dna
         codon = dna[start:end]
+        # checks for start codon
         if codon == 'ATG':
+            # get new ORF
             new_ORF = rest_of_ORF(dna[running_length:len(dna)])
+            # update return variable list_ORFs
             list_ORFs = list_ORFs + [new_ORF]
+            # updates running_length to index after last ORF
             running_length = running_length + len(new_ORF)
         else:
+            # updates running_length to index of next codon
             running_length = running_length + 3
     return list_ORFs
 
