@@ -75,8 +75,19 @@ def rest_of_ORF(dna):
     >>> rest_of_ORF("ATGAGATAGG")
     'ATGAGA'
     """
-    # TODO: implement this
-    pass
+    ORF = dna[0:3]
+    length_codons = len(dna)//3
+    for i in range(2, length_codons+1):
+        end = 3*i
+        start = end - 3
+        codon = dna[start:end]
+        if codon == 'TGA' or codon == 'TAG' or codon == 'TAA':
+            return ORF
+        else:
+            ORF = ORF + codon
+            if (i*3 + 3) > len(dna):
+                ORF = ORF + dna[end:len(dna)]
+    return ORF
 
 
 def find_all_ORFs_oneframe(dna):
@@ -92,8 +103,19 @@ def find_all_ORFs_oneframe(dna):
     >>> find_all_ORFs_oneframe("ATGCATGAATGTAGATAGATGTGCCC")
     ['ATGCATGAATGTAGA', 'ATGTGCCC']
     """
-    # TODO: implement this
-    pass
+    running_length = 0
+    list_ORFs = []
+    while running_length <= len(dna):
+        start = running_length
+        end = start + 3
+        codon = dna[start:end]
+        if codon == 'ATG':
+            new_ORF = rest_of_ORF(dna[running_length:len(dna)])
+            list_ORFs = list_ORFs + [new_ORF]
+            running_length = running_length + len(new_ORF)
+        else:
+            running_length = running_length + 3
+    return list_ORFs
 
 
 def find_all_ORFs(dna):
@@ -109,8 +131,14 @@ def find_all_ORFs(dna):
     >>> find_all_ORFs("ATGCATGAATGTAG")
     ['ATGCATGAATGTAG', 'ATGAATGTAG', 'ATG']
     """
-    # TODO: implement this
-    pass
+    frame_1 = dna
+    frame_1_list = find_all_ORFs_oneframe(frame_1)
+    frame_2 = dna[1:len(dna)]
+    frame_2_list = find_all_ORFs_oneframe(frame_2)
+    frame_3 = dna[2:len(dna)]
+    frame_3_list = find_all_ORFs_oneframe(frame_3)
+    list_ORFs = frame_1_list + frame_2_list + frame_3_list
+    return list_ORFs
 
 
 def find_all_ORFs_both_strands(dna):
@@ -122,8 +150,11 @@ def find_all_ORFs_both_strands(dna):
     >>> find_all_ORFs_both_strands("ATGCGAATGTAGCATCAAA")
     ['ATGCGAATG', 'ATGCTACATTCGCAT']
     """
-    # TODO: implement this
-    pass
+    r_compelment = get_reverse_complement(dna)
+    dna_ORFs = find_all_ORFs(dna)
+    reverse_compelment_ORFs = find_all_ORFs(r_compelment)
+    all_ORFs = dna_ORFs + reverse_compelment_ORFs
+    return all_ORFs
 
 
 def longest_ORF(dna):
@@ -178,4 +209,4 @@ def gene_finder(dna):
 if __name__ == "__main__":
     import doctest
     doctest.testmod()
-    get_reverse_complement("ATGCCCGCTTT")
+    rest_of_ORF("ATGAGATAGG")
